@@ -46,12 +46,9 @@ namespace QuizApp.Controllers
         {
             Category objCategory = new Category();
               objCategory.Category_Name = c.Category_Name;
-              objCategory.Category_fk_AdminId = Convert.ToInt32(Session["ad_id"].ToString());
             db.Categories.Add(objCategory);
             db.SaveChanges();
             return RedirectToAction("addCategory");
-
-             
 
             
         }
