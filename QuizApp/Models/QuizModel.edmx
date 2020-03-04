@@ -20,7 +20,7 @@
           <Property Name="Category_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Category_Name" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="Admin_Id" Type="int" />
-          <Property Name="Category_encryptedString" Type="nvarchar" MaxLength="50" />
+          <Property Name="Category_fk_AdminId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Questions">
           <Key>
@@ -131,18 +131,7 @@
           <Property Name="Admin_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Admin_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Admin_Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Categories" Relationship="Self.FK_Category_Admin" FromRole="Admin" ToRole="Category" />
-        </EntityType>
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="Category_Id" />
-          </Key>
-          <Property Name="Category_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Category_Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Admin_Id" Type="Int32" />
-          <Property Name="Category_encryptedString" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Admin" Relationship="Self.FK_Category_Admin" FromRole="Category" ToRole="Admin" />
-          <NavigationProperty Name="Questions" Relationship="Self.FK_Questions_Category" FromRole="Category" ToRole="Questions" />
+          <NavigationProperty Name="Categories" Relationship="QuizAppModel.FK_Category_Admin" FromRole="Admin" ToRole="Category" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -156,7 +145,7 @@
           <Property Name="OptionD" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CorrectOption" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Category_Id" Type="Int32" />
-          <NavigationProperty Name="Category" Relationship="Self.FK_Questions_Category" FromRole="Questions" ToRole="Category" />
+          <NavigationProperty Name="Category" Relationship="QuizAppModel.FK_Questions_Category" FromRole="Question" ToRole="Category" />
         </EntityType>
         <EntityType Name="SetExam">
           <Key>
@@ -189,30 +178,6 @@
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
-        <Association Name="FK_Category_Admin">
-          <End Role="Admin" Type="Self.Admin" Multiplicity="0..1" />
-          <End Role="Category" Type="Self.Category" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Admin">
-              <PropertyRef Name="Admin_Id" />
-            </Principal>
-            <Dependent Role="Category">
-              <PropertyRef Name="Admin_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Questions_Category">
-          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
-          <End Role="Questions" Type="Self.Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="Category_Id" />
-            </Principal>
-            <Dependent Role="Questions">
-              <PropertyRef Name="Category_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SetExam_Student">
           <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
           <End Role="SetExam" Type="Self.SetExam" Multiplicity="*" />
@@ -227,24 +192,59 @@
         </Association>
         <EntityContainer Name="QuizAppEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Admins" EntityType="Self.Admin" />
-          <EntitySet Name="Categories" EntityType="Self.Category" />
           <EntitySet Name="Questions" EntityType="Self.Question" />
           <EntitySet Name="SetExams" EntityType="Self.SetExam" />
           <EntitySet Name="Students" EntityType="Self.Student" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-          <AssociationSet Name="FK_Category_Admin" Association="Self.FK_Category_Admin">
-            <End Role="Admin" EntitySet="Admins" />
-            <End Role="Category" EntitySet="Categories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Questions_Category" Association="Self.FK_Questions_Category">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Questions" EntitySet="Questions" />
-          </AssociationSet>
           <AssociationSet Name="FK_SetExam_Student" Association="Self.FK_SetExam_Student">
             <End Role="Student" EntitySet="Students" />
             <End Role="SetExam" EntitySet="SetExams" />
           </AssociationSet>
+          <EntitySet Name="Categories" EntityType="QuizAppModel.Category" />
+          <AssociationSet Name="FK_Category_Admin" Association="QuizAppModel.FK_Category_Admin">
+            <End Role="Admin" EntitySet="Admins" />
+            <End Role="Category" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Questions_Category" Association="QuizAppModel.FK_Questions_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Category_Id" />
+          </Key>
+          <Property Name="Category_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category_Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Admin_Id" Type="Int32" />
+          <Property Name="Category_fk_AdminId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Admin" Relationship="QuizAppModel.FK_Category_Admin" FromRole="Category" ToRole="Admin" />
+          <NavigationProperty Name="Questions" Relationship="QuizAppModel.FK_Questions_Category" FromRole="Category" ToRole="Question" />
+        </EntityType>
+        <Association Name="FK_Category_Admin">
+          <End Type="QuizAppModel.Admin" Role="Admin" Multiplicity="0..1" />
+          <End Type="QuizAppModel.Category" Role="Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Admin">
+              <PropertyRef Name="Admin_Id" />
+            </Principal>
+            <Dependent Role="Category">
+              <PropertyRef Name="Admin_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Questions_Category">
+          <End Type="QuizAppModel.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="QuizAppModel.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Category_Id" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -257,16 +257,6 @@
                 <ScalarProperty Name="Admin_Id" ColumnName="Admin_Id" />
                 <ScalarProperty Name="Admin_Name" ColumnName="Admin_Name" />
                 <ScalarProperty Name="Admin_Password" ColumnName="Admin_Password" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="QuizAppModel.Category">
-              <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
-                <ScalarProperty Name="Category_Name" ColumnName="Category_Name" />
-                <ScalarProperty Name="Admin_Id" ColumnName="Admin_Id" />
-                <ScalarProperty Name="Category_encryptedString" ColumnName="Category_encryptedString" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -313,6 +303,16 @@
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="QuizAppModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Category_fk_AdminId" ColumnName="Category_fk_AdminId" />
+                <ScalarProperty Name="Admin_Id" ColumnName="Admin_Id" />
+                <ScalarProperty Name="Category_Name" ColumnName="Category_Name" />
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

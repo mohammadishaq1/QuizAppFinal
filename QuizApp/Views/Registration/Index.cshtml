@@ -1,0 +1,83 @@
+﻿@model QuizApp.Models.Student
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <title>sRegister</title>
+
+
+</head>
+<body>
+
+    @if (ViewBag.msg != null)
+    {
+        <div class="alert alert-danger">
+            <strong>Error</strong>@ViewBag.msg
+
+        </div>
+    }
+
+    <h2 style="text-align:center;background-color:#ffffff;font-family:'Adobe Garamond Pro';margin:0 auto">Student Registration</h2>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8  col-md-8 col-sm-8">
+
+
+                <div class="container" style="width:40%">
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+
+                    @using (@Html.BeginForm("Index","Registration"))
+                    {
+
+                <div class="form-group">
+                    @Html.Label("Student_Name", "Name")
+                  
+                    @Html.TextBoxFor(x => x.Student_Name, htmlAttributes: new { @class = "form-control" })
+
+                </div>
+                <div class="form-group">
+                    @Html.Label("Student_Password", "Password")
+                    @Html.PasswordFor(x => x.Student_Password, new { @class = "form-control" })
+                </div>
+
+
+                        <input type="submit" value="Register Now!" class="btn btn-success btn-block" />
+
+
+                    }
+
+                    
+
+                </div>
+
+
+            </div>
+
+            <div class="col-lg-4  col-md-4 col-sm-4">
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+</body>
+</html>

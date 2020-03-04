@@ -32,6 +32,9 @@ namespace QuizApp.Controllers
             return View();
         }
 
+
+
+
         public ActionResult slogin()
         {
             return View();
@@ -49,7 +52,7 @@ namespace QuizApp.Controllers
             else
             {
                 Session["std_id"] = objStudent.Student_Id;
-                return RedirectToAction("StudentExam");
+                return RedirectToAction("Index", "StudentDashboard");
             }
             return View();
         }

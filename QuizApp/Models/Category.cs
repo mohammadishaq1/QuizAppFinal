@@ -23,7 +23,7 @@ namespace QuizApp.Models
         public int Category_Id { get; set; }
         public string Category_Name { get; set; }
         public Nullable<int> Admin_Id { get; set; }
-        public string Category_encryptedString { get; set; }
+        public int Category_fk_AdminId { get; set; }
     
         public virtual Admin Admin { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
