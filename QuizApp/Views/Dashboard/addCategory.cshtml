@@ -7,10 +7,10 @@
 
 <h2>addCategory</h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Category</h4>
         <hr />
@@ -23,7 +23,7 @@
             </div>
         </div>
 
-          <div class="form-group">
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -38,7 +38,7 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
+                <th>Category Name</th>
                 <th>View All questions</th>
             </tr>
         </thead>
@@ -48,11 +48,14 @@
                 <tr>
                     <td>@item.Category_Id</td>
                     <td>@item.Category_Name</td>
-                  
-                    <td><a class="btn btn-info" href="@Url.Action("viewAllQuestions", new { id=item.Category_Id})">View questions</a></td>
+
+                    <td><a class="btn btn-info" href="@Url.Action("ViewQuestion", "Dashboard", new { id=item.Category_Id})">View questions</a></td>
                 </tr>
             }
 
         </tbody>
     </table>
 </div>
+
+
+https://localhost:44378/Dashboard/ViewQuestion

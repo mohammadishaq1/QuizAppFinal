@@ -53,7 +53,54 @@ namespace QuizApp.Controllers
             
         }
 
+        /////////////////////////////////Add Question/////////////////////////////////////////////////
 
+        public ActionResult AddQueston()
+        {
+            
+            List<Category> listOfCategory = db.Categories.ToList();
+            ViewBag.list = new SelectList(listOfCategory, "Category_Id", "Category_Name");
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AddQueston(Question q)
+        {
+           
+            Question objQuestion = new Question();
+            objQuestion.Question_Name = q.Question_Name;
+            objQuestion.OptionA = q.OptionA;
+            objQuestion.OptionB = q.OptionB;
+            objQuestion.OptionC = q.OptionC;
+            objQuestion.OptionD = q.OptionD;
+            objQuestion.CorrectOption = q.CorrectOption;
+            objQuestion.Category_Id = q.Category_Id;
+            db.Questions.Add(objQuestion);
+            db.SaveChanges();
+
+            TempData["msg"] = "Question Add";
+            TempData.Keep();
+            return RedirectToAction("AddQueston");
+
+            
+        }
+
+        /////////////////////////////////View Questions/////////////////////////////////////////////////
+
+        public ActionResult ViewQuestion(int? id)
+        {
+            if (Session["ad_id"] == null)
+            {
+                return RedirectToAction("alogin");
+            }
+
+            if (id == null)
+            {
+                return RedirectToAction("Dashboard");
+            }
+
+
+            return View(db.Questions.Where(x=>x.Question_Id == id).ToList());
+        }
     }
 }
 
