@@ -24,18 +24,18 @@ namespace QuizApp.Controllers
 
             return View();
         }
-       
+        /////////////////////////////////Student submit category/////////////////////////////////////////////////
         [HttpPost]
         public ActionResult Index(int Category_Name)
         {
-            List<Category> listOfCategory = db.Categories.ToList();
-            
             if (Session["std_id"] == null)
             {
                 return RedirectToAction("slogin", "Login");
             }
-           
-            foreach(var item in listOfCategory)
+
+            List<Category> listOfCategory = db.Categories.ToList();
+
+            foreach (var item in listOfCategory)
             {
                 if (item.Category_Id == Category_Name)
                 {
@@ -77,6 +77,10 @@ namespace QuizApp.Controllers
                     TempData["questions"] = qlist;
                     TempData.Keep();
                 }
+                else
+                {
+                    return RedirectToAction("QuizEnd");
+                }
 
             }
             else
@@ -86,6 +90,17 @@ namespace QuizApp.Controllers
             return View(q);
 
 
+        }
+        /////////////////////////////////Submit Quiz/////////////////////////////////////////////////
+        
+
+
+        /////////////////////////////////End Quiz Page/////////////////////////////////////////////////
+
+        public ActionResult QuizEnd()
+        {
+
+            return View();
         }
 
     }
