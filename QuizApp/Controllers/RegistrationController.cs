@@ -15,10 +15,10 @@ namespace QuizApp.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            if (Session["ad_id"] == null)
-            {
-                return RedirectToAction("aLogin", "Login");
-            }
+            //if (Session["std_id"] == null)
+            //{
+            //    return RedirectToAction("sLogin", "Login");
+            //}
             return View();
 
         }
