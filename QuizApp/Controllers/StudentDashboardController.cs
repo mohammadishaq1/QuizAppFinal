@@ -92,14 +92,43 @@ namespace QuizApp.Controllers
 
         }
         /////////////////////////////////Submit Quiz/////////////////////////////////////////////////
-        
+        [HttpPost]
+            public ActionResult QuizStart(Question q)
+            {
+            string correctAnswer = null;
+            if (q.OptionA != null)
+            {
+                correctAnswer = "A";
+            }
+           else if (q.OptionB != null)
+            {
+                correctAnswer = "B";
+            }
+            else if (q.OptionC != null)
+            {
+                correctAnswer = "C";
+            }
+            else if (q.OptionD != null)
+            {
+                correctAnswer = "D";
+            }
+            if (correctAnswer.Equals(q.CorrectOption))
+            {
+                TempData["score"] = Convert.ToInt32(TempData["score"]) + 1;
+            }
+            TempData.Keep();
+            return RedirectToAction("QuizStart");
 
+            }
 
         /////////////////////////////////End Quiz Page/////////////////////////////////////////////////
 
         public ActionResult QuizEnd()
         {
-
+            if (Session["std_id"] == null)
+            {
+                return RedirectToAction("slogin", "Login");
+            }
             return View();
         }
 
