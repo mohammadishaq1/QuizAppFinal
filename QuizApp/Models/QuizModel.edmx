@@ -35,15 +35,16 @@
           <Property Name="CorrectOption" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="Category_Id" Type="int" />
         </EntityType>
-        <EntityType Name="SetExam">
+        <EntityType Name="Report">
           <Key>
-            <PropertyRef Name="Exam_Id" />
+            <PropertyRef Name="Quiz_Id" />
           </Key>
-          <Property Name="Exam_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Exam_Date" Type="datetime" />
-          <Property Name="Student_Id" Type="int" />
-          <Property Name="Exam_Name" Type="nvarchar" MaxLength="250" Nullable="false" />
-          <Property Name="Exam_StudentScore" Type="int" />
+          <Property Name="Quiz_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Quiz_Date" Type="datetime" Nullable="false" />
+          <Property Name="Student_Id" Type="int" Nullable="false" />
+          <Property Name="Quiz_Name" Type="nvarchar" MaxLength="250" />
+          <Property Name="Student_Score" Type="int" Nullable="false" />
+          <Property Name="Category_Id" Type="int" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -88,14 +89,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SetExam_Student">
-          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
-          <End Role="SetExam" Type="Self.SetExam" Multiplicity="*" />
+        <Association Name="FK_Report_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Report" Type="Self.Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Category_Id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Report_Student1">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="Report" Type="Self.Report" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Student">
               <PropertyRef Name="Student_Id" />
             </Principal>
-            <Dependent Role="SetExam">
+            <Dependent Role="Report">
               <PropertyRef Name="Student_Id" />
             </Dependent>
           </ReferentialConstraint>
@@ -104,7 +117,7 @@
           <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SetExam" EntityType="Self.SetExam" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Report" EntityType="Self.Report" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Category_Admin" Association="Self.FK_Category_Admin">
@@ -115,92 +128,26 @@
             <End Role="Category" EntitySet="Category" />
             <End Role="Questions" EntitySet="Questions" />
           </AssociationSet>
-          <AssociationSet Name="FK_SetExam_Student" Association="Self.FK_SetExam_Student">
+          <AssociationSet Name="FK_Report_Category" Association="Self.FK_Report_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Report" EntitySet="Report" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Report_Student1" Association="Self.FK_Report_Student1">
             <End Role="Student" EntitySet="Student" />
-            <End Role="SetExam" EntitySet="SetExam" />
+            <End Role="Report" EntitySet="Report" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="QuizAppModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Admin">
-          <Key>
-            <PropertyRef Name="Admin_Id" />
-          </Key>
-          <Property Name="Admin_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Admin_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Admin_Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Categories" Relationship="QuizAppModel.FK_Category_Admin" FromRole="Admin" ToRole="Category" />
-        </EntityType>
-        <EntityType Name="Question">
-          <Key>
-            <PropertyRef Name="Question_Id" />
-          </Key>
-          <Property Name="Question_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Question_Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="OptionA" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="OptionB" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="OptionC" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="OptionD" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="CorrectOption" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Category_Id" Type="Int32" />
-          <NavigationProperty Name="Category" Relationship="QuizAppModel.FK_Questions_Category" FromRole="Question" ToRole="Category" />
-        </EntityType>
-        <EntityType Name="SetExam">
-          <Key>
-            <PropertyRef Name="Exam_Id" />
-          </Key>
-          <Property Name="Exam_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Exam_Date" Type="DateTime" Precision="3" />
-          <Property Name="Student_Id" Type="Int32" />
-          <Property Name="Exam_Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Exam_StudentScore" Type="Int32" />
-          <NavigationProperty Name="Student" Relationship="Self.FK_SetExam_Student" FromRole="SetExam" ToRole="Student" />
-        </EntityType>
-        <EntityType Name="Student">
-          <Key>
-            <PropertyRef Name="Student_Id" />
-          </Key>
-          <Property Name="Student_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Student_Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Student_Password" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Student_Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="SetExams" Relationship="Self.FK_SetExam_Student" FromRole="Student" ToRole="SetExam" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <Association Name="FK_SetExam_Student">
-          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
-          <End Role="SetExam" Type="Self.SetExam" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Student">
-              <PropertyRef Name="Student_Id" />
-            </Principal>
-            <Dependent Role="SetExam">
-              <PropertyRef Name="Student_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="QuizAppEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Admins" EntityType="Self.Admin" />
-          <EntitySet Name="Questions" EntityType="Self.Question" />
-          <EntitySet Name="SetExams" EntityType="Self.SetExam" />
-          <EntitySet Name="Students" EntityType="Self.Student" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-          <AssociationSet Name="FK_SetExam_Student" Association="Self.FK_SetExam_Student">
-            <End Role="Student" EntitySet="Students" />
-            <End Role="SetExam" EntitySet="SetExams" />
-          </AssociationSet>
+          <EntitySet Name="Admins" EntityType="QuizAppModel.Admin" />
           <EntitySet Name="Categories" EntityType="QuizAppModel.Category" />
+          <EntitySet Name="Questions" EntityType="QuizAppModel.Question" />
+          <EntitySet Name="Reports" EntityType="QuizAppModel.Report" />
+          <EntitySet Name="Students" EntityType="QuizAppModel.Student" />
+          <EntitySet Name="sysdiagrams" EntityType="QuizAppModel.sysdiagram" />
           <AssociationSet Name="FK_Category_Admin" Association="QuizAppModel.FK_Category_Admin">
             <End Role="Admin" EntitySet="Admins" />
             <End Role="Category" EntitySet="Categories" />
@@ -209,7 +156,24 @@
             <End Role="Category" EntitySet="Categories" />
             <End Role="Question" EntitySet="Questions" />
           </AssociationSet>
+          <AssociationSet Name="FK_Report_Category" Association="QuizAppModel.FK_Report_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Report" EntitySet="Reports" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Report_Student1" Association="QuizAppModel.FK_Report_Student1">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="Report" EntitySet="Reports" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="Admin_Id" />
+          </Key>
+          <Property Name="Admin_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Admin_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Admin_Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Categories" Relationship="QuizAppModel.FK_Category_Admin" FromRole="Admin" ToRole="Category" />
+        </EntityType>
         <EntityType Name="Category">
           <Key>
             <PropertyRef Name="Category_Id" />
@@ -220,6 +184,54 @@
           <Property Name="Category_fk_AdminId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Admin" Relationship="QuizAppModel.FK_Category_Admin" FromRole="Category" ToRole="Admin" />
           <NavigationProperty Name="Questions" Relationship="QuizAppModel.FK_Questions_Category" FromRole="Category" ToRole="Question" />
+          <NavigationProperty Name="Reports" Relationship="QuizAppModel.FK_Report_Category" FromRole="Category" ToRole="Report" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="Question_Id" />
+          </Key>
+          <Property Name="Question_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Question_Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OptionA" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OptionB" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OptionC" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OptionD" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CorrectOption" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Category_Id" Type="Int32" />
+          <NavigationProperty Name="Category" Relationship="QuizAppModel.FK_Questions_Category" FromRole="Question" ToRole="Category" />
+        </EntityType>
+        <EntityType Name="Report">
+          <Key>
+            <PropertyRef Name="Quiz_Id" />
+          </Key>
+          <Property Name="Quiz_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Quiz_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Student_Id" Type="Int32" Nullable="false" />
+          <Property Name="Quiz_Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Student_Score" Type="Int32" Nullable="false" />
+          <Property Name="Category_Id" Type="Int32" />
+          <NavigationProperty Name="Category" Relationship="QuizAppModel.FK_Report_Category" FromRole="Report" ToRole="Category" />
+          <NavigationProperty Name="Student" Relationship="QuizAppModel.FK_Report_Student1" FromRole="Report" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Student_Id" />
+          </Key>
+          <Property Name="Student_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Student_Name" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Student_Password" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Student_Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Reports" Relationship="QuizAppModel.FK_Report_Student1" FromRole="Student" ToRole="Report" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_Category_Admin">
           <End Type="QuizAppModel.Admin" Role="Admin" Multiplicity="0..1" />
@@ -245,7 +257,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK_Report_Category">
+          <End Type="QuizAppModel.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="QuizAppModel.Report" Role="Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Category_Id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Report_Student1">
+          <End Type="QuizAppModel.Student" Role="Student" Multiplicity="1" />
+          <End Type="QuizAppModel.Report" Role="Report" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Student_Id" />
+            </Principal>
+            <Dependent Role="Report">
+              <PropertyRef Name="Student_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -254,55 +290,9 @@
           <EntitySetMapping Name="Admins">
             <EntityTypeMapping TypeName="QuizAppModel.Admin">
               <MappingFragment StoreEntitySet="Admin">
-                <ScalarProperty Name="Admin_Id" ColumnName="Admin_Id" />
-                <ScalarProperty Name="Admin_Name" ColumnName="Admin_Name" />
                 <ScalarProperty Name="Admin_Password" ColumnName="Admin_Password" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Questions">
-            <EntityTypeMapping TypeName="QuizAppModel.Question">
-              <MappingFragment StoreEntitySet="Questions">
-                <ScalarProperty Name="Question_Id" ColumnName="Question_Id" />
-                <ScalarProperty Name="Question_Name" ColumnName="Question_Name" />
-                <ScalarProperty Name="OptionA" ColumnName="OptionA" />
-                <ScalarProperty Name="OptionB" ColumnName="OptionB" />
-                <ScalarProperty Name="OptionC" ColumnName="OptionC" />
-                <ScalarProperty Name="OptionD" ColumnName="OptionD" />
-                <ScalarProperty Name="CorrectOption" ColumnName="CorrectOption" />
-                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SetExams">
-            <EntityTypeMapping TypeName="QuizAppModel.SetExam">
-              <MappingFragment StoreEntitySet="SetExam">
-                <ScalarProperty Name="Exam_Id" ColumnName="Exam_Id" />
-                <ScalarProperty Name="Exam_Date" ColumnName="Exam_Date" />
-                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
-                <ScalarProperty Name="Exam_Name" ColumnName="Exam_Name" />
-                <ScalarProperty Name="Exam_StudentScore" ColumnName="Exam_StudentScore" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Students">
-            <EntityTypeMapping TypeName="QuizAppModel.Student">
-              <MappingFragment StoreEntitySet="Student">
-                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
-                <ScalarProperty Name="Student_Name" ColumnName="Student_Name" />
-                <ScalarProperty Name="Student_Password" ColumnName="Student_Password" />
-                <ScalarProperty Name="Student_Image" ColumnName="Student_Image" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="QuizAppModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="Admin_Name" ColumnName="Admin_Name" />
+                <ScalarProperty Name="Admin_Id" ColumnName="Admin_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -313,6 +303,53 @@
                 <ScalarProperty Name="Admin_Id" ColumnName="Admin_Id" />
                 <ScalarProperty Name="Category_Name" ColumnName="Category_Name" />
                 <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="QuizAppModel.Question">
+              <MappingFragment StoreEntitySet="Questions">
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+                <ScalarProperty Name="CorrectOption" ColumnName="CorrectOption" />
+                <ScalarProperty Name="OptionD" ColumnName="OptionD" />
+                <ScalarProperty Name="OptionC" ColumnName="OptionC" />
+                <ScalarProperty Name="OptionB" ColumnName="OptionB" />
+                <ScalarProperty Name="OptionA" ColumnName="OptionA" />
+                <ScalarProperty Name="Question_Name" ColumnName="Question_Name" />
+                <ScalarProperty Name="Question_Id" ColumnName="Question_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reports">
+            <EntityTypeMapping TypeName="QuizAppModel.Report">
+              <MappingFragment StoreEntitySet="Report">
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+                <ScalarProperty Name="Student_Score" ColumnName="Student_Score" />
+                <ScalarProperty Name="Quiz_Name" ColumnName="Quiz_Name" />
+                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
+                <ScalarProperty Name="Quiz_Date" ColumnName="Quiz_Date" />
+                <ScalarProperty Name="Quiz_Id" ColumnName="Quiz_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="QuizAppModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="Student_Image" ColumnName="Student_Image" />
+                <ScalarProperty Name="Student_Password" ColumnName="Student_Password" />
+                <ScalarProperty Name="Student_Name" ColumnName="Student_Name" />
+                <ScalarProperty Name="Student_Id" ColumnName="Student_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="QuizAppModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

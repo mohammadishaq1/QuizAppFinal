@@ -18,6 +18,7 @@ namespace QuizApp.Models
         public Category()
         {
             this.Questions = new HashSet<Question>();
+            this.Reports = new HashSet<Report>();
         }
     
         public int Category_Id { get; set; }
@@ -28,5 +29,7 @@ namespace QuizApp.Models
         public virtual Admin Admin { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Question> Questions { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

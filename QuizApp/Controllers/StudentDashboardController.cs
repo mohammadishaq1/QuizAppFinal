@@ -45,8 +45,10 @@ namespace QuizApp.Controllers
                     {
                         queue.Enqueue(a);
                     }
+                    TempData["examid"] = item.Category_Id;
                     TempData["questions"] = queue;
                     TempData["score"] = 0;
+                
                     TempData.Keep();
                     return RedirectToAction("QuizStart");
                 }
@@ -129,6 +131,17 @@ namespace QuizApp.Controllers
             {
                 return RedirectToAction("slogin", "Login");
             }
+            Report rep = new Report();
+            rep.Category_Id = Convert.ToInt32(TempData["examid"]);
+            rep.Student_Id = Convert.ToInt32(Session["std_id"]);
+            rep.Quiz_Date = System.DateTime.Now;
+            int total = Convert.ToInt32(TempData["examid"]);
+            rep.Student_Score = (int)Convert.ToInt32(TempData["score"].ToString()) * 100 / Convert.ToInt32(total);
+            db.Reports.Add(rep);
+            db.SaveChanges();
+            Session.RemoveAll();
+            TempData["score"] = rep.Student_Score + "%";
+
             return View();
         }
 

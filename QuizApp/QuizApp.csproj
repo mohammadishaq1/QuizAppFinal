@@ -157,7 +157,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QuizModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\SetExam.cs">
+    <Compile Include="Models\Report.cs">
       <DependentUpon>QuizModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Student.cs">

@@ -17,7 +17,7 @@ namespace QuizApp.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Student()
         {
-            this.SetExams = new HashSet<SetExam>();
+            this.Reports = new HashSet<Report>();
         }
     
         public int Student_Id { get; set; }
@@ -26,6 +26,6 @@ namespace QuizApp.Models
         public string Student_Image { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SetExam> SetExams { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

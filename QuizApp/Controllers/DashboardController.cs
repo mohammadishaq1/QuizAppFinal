@@ -36,7 +36,7 @@ namespace QuizApp.Controllers
             {
                 return RedirectToAction("alogin", "Login");
             }
-          
+
             List<Category> listOfCategory = db.Categories.ToList();
             ViewData["listOfCategory"] = listOfCategory;
             return View();

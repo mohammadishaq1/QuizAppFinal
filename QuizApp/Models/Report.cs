@@ -12,14 +12,16 @@ namespace QuizApp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class SetExam
+    public partial class Report
     {
-        public int Exam_Id { get; set; }
-        public Nullable<System.DateTime> Exam_Date { get; set; }
-        public Nullable<int> Student_Id { get; set; }
-        public string Exam_Name { get; set; }
-        public Nullable<int> Exam_StudentScore { get; set; }
+        public int Quiz_Id { get; set; }
+        public System.DateTime Quiz_Date { get; set; }
+        public int Student_Id { get; set; }
+        public string Quiz_Name { get; set; }
+        public int Student_Score { get; set; }
+        public Nullable<int> Category_Id { get; set; }
     
+        public virtual Category Category { get; set; }
         public virtual Student Student { get; set; }
     }
 }
