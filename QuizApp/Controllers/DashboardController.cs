@@ -90,16 +90,16 @@ namespace QuizApp.Controllers
         {
             if (Session["ad_id"] == null)
             {
-                return RedirectToAction("alogin");
+                return RedirectToAction("alogin","login");
             }
 
             if (id == null)
             {
-                return RedirectToAction("Dashboard");
+                return RedirectToAction("Index");
             }
 
 
-            return View(db.Questions.Where(x=>x.Question_Id == id).ToList());
+            return View(db.Questions.Where(x=>x.Category_Id == id).ToList());
         }
     }
 }
