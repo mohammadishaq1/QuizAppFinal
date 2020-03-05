@@ -195,11 +195,12 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Login\aLogin.cshtml" />
     <Content Include="Views\Login\slogin.cshtml" />
-    <Content Include="Views\StudentDashboard\Index.cshtml" />
     <Content Include="Views\Registration\Index.cshtml" />
     <Content Include="Views\Dashboard\addCategory.cshtml" />
     <Content Include="Views\Dashboard\AddQueston.cshtml" />
     <Content Include="Views\Dashboard\ViewQuestion.cshtml" />
+    <Content Include="Views\StudentDashboard\Index.cshtml" />
+    <Content Include="Views\StudentDashboard\QuizStart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
