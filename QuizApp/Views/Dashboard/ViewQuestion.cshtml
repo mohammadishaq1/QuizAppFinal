@@ -58,8 +58,9 @@
             @Html.DisplayFor(modelItem => item.Category.Category_Name)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Question_Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Question_Id })
+            <a class="btn btn-danger" href="@Url.Action("QuestionDelete", "Dashboard", new { id=item.Question_Id})">Delete</a>
+            <a class="btn btn-info" href="@Url.Action("QuestionEdit", "Dashboard", new { id=item.Question_Id})">Edit</a>
+           
         </td>
     </tr>
 }

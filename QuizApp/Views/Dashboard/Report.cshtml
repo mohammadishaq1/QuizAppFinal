@@ -10,47 +10,52 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Quiz_Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Student.Student_Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category.Category_Name)
-        </th>
 
-        <th>
-            @Html.DisplayNameFor(model => model.Student_Score)
-        </th>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Quiz_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.Student_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category.Category_Name)
+            </th>
 
-
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Quiz_Date)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Student.Student_Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Category.Category_Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Student_Score)
-    </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Student_Score)
+            </th>
 
 
-    <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.Quiz_Id }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.Quiz_Id })
-    </td>
-</tr>
-}
+            <th></th>
+        </tr>
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quiz_Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.Student_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Category_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student_Score)
+                </td>
+
+
+                <td>
+
+                    <a class="btn btn-danger" href="@Url.Action("Delete", "Dashboard", new { id=item.Quiz_Id})">Delete</a>
+                  
+                </td>
+            </tr>
+        }
+        
+    </table>
+
+

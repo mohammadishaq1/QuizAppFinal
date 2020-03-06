@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -101,7 +102,7 @@ namespace QuizApp.Controllers
 
             return View(db.Questions.Where(x=>x.Category_Id == id).ToList());
         }
-
+        /////////////////////////////////View Report/////////////////////////////////////////////////
         public ActionResult Report()
         {
             if (Session["ad_id"] == null)
@@ -112,6 +113,44 @@ namespace QuizApp.Controllers
 
             return View(db.Reports.ToList());
         }
+
+        /////////////////////////////////Delete Report/////////////////////////////////////////////////
+        public ActionResult Delete(int id)
+        {
+
+            Report rep = db.Reports.Where(x => x.Quiz_Id == id).FirstOrDefault();
+            db.Reports.Remove(rep);
+            db.SaveChanges();
+            return RedirectToAction("Report");
+        }
+
+        /////////////////////////////////Delete Question/////////////////////////////////////////////////
+        public ActionResult QuestionDelete(int id)
+        {
+            Question q = db.Questions.Where(x => x.Question_Id == id).FirstOrDefault();
+            db.Questions.Remove(q);
+            db.SaveChanges();
+            return RedirectToAction("addCategory");
+        }
+
+        /////////////////////////////////Edit Question/////////////////////////////////////////////////
+
+        public ActionResult QuestionEdit(int id)
+        {
+            List<Category> listOfCategory = db.Categories.ToList();
+            ViewBag.list = new SelectList(listOfCategory, "Category_Id", "Category_Name");
+            return View(db.Questions.Where(x=>x.Question_Id ==id).SingleOrDefault());
+        }
+        [HttpPost]
+        public ActionResult QuestionEdit(int id, Question question)
+        {
+           
+
+            db.Entry(question).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("addCategory");
+        }
+
     }
 }
 
