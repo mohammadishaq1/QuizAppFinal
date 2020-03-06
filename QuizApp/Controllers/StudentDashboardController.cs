@@ -34,21 +34,20 @@ namespace QuizApp.Controllers
             }
 
             List<Category> listOfCategory = db.Categories.ToList();
-
+            TempData["score"] = 0;
             foreach (var item in listOfCategory)
             {
                 if (item.Category_Id == Category_Name)
                 {
                     List<Question> li = db.Questions.Where(x => x.Category_Id == item.Category_Id).ToList();
                     Queue<Question> queue = new Queue<Question>();
-                    TempData["score"] = 0;
+                   
                     foreach (Question a in li)
                     {
                         queue.Enqueue(a);
                     }
                     TempData["examid"] = item.Category_Id;
                     TempData["questions"] = queue;
-                   
                 
                     TempData.Keep();
                     return RedirectToAction("QuizStart");
@@ -137,14 +136,18 @@ namespace QuizApp.Controllers
             rep.Student_Id = Convert.ToInt32(Session["std_id"]);
             rep.Quiz_Date = System.DateTime.Now;
             int total = Convert.ToInt32(TempData["examid"]);
-            rep.Student_Score = (int)Convert.ToInt32(TempData["score"].ToString()) * 100 / Convert.ToInt32(total);
+            List<Question> numberOfQuestions = db.Questions.ToList();
+            var totalOfQuestion = numberOfQuestions.Where(x => x.Category_Id == total).Count();
+            rep.Student_Score = (int)Convert.ToInt32(TempData["score"].ToString()) * 100 / Convert.ToInt32(totalOfQuestion);
             db.Reports.Add(rep);
             db.SaveChanges();
             Session.RemoveAll();
-            TempData["score"] = rep.Student_Score + "%";
+            TempData["score"] = rep.Student_Score + " %";
 
             return View();
         }
+
+      
 
     }
 }

@@ -101,6 +101,17 @@ namespace QuizApp.Controllers
 
             return View(db.Questions.Where(x=>x.Category_Id == id).ToList());
         }
+
+        public ActionResult Report()
+        {
+            if (Session["ad_id"] == null)
+            {
+                return RedirectToAction("slogin", "Login");
+            }
+
+
+            return View(db.Reports.ToList());
+        }
     }
 }
 

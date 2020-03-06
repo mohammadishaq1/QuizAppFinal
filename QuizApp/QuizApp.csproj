@@ -202,6 +202,7 @@
     <Content Include="Views\StudentDashboard\Index.cshtml" />
     <Content Include="Views\StudentDashboard\QuizStart.cshtml" />
     <Content Include="Views\StudentDashboard\QuizEnd.cshtml" />
+    <Content Include="Views\Dashboard\Report.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
