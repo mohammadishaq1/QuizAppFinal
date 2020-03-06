@@ -41,13 +41,14 @@ namespace QuizApp.Controllers
                 {
                     List<Question> li = db.Questions.Where(x => x.Category_Id == item.Category_Id).ToList();
                     Queue<Question> queue = new Queue<Question>();
-                    foreach(Question a in li)
+                    TempData["score"] = 0;
+                    foreach (Question a in li)
                     {
                         queue.Enqueue(a);
                     }
                     TempData["examid"] = item.Category_Id;
                     TempData["questions"] = queue;
-                    TempData["score"] = 0;
+                   
                 
                     TempData.Keep();
                     return RedirectToAction("QuizStart");
@@ -116,7 +117,7 @@ namespace QuizApp.Controllers
             }
             if (correctAnswer.Equals(q.CorrectOption))
             {
-                TempData["score"] = Convert.ToInt32(TempData["score"]) + 1;
+                TempData["score"] = Convert.ToInt32(TempData["score"].ToString()) + 1;
             }
             TempData.Keep();
             return RedirectToAction("QuizStart");
